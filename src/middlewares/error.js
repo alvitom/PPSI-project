@@ -1,3 +1,4 @@
+const { ZodError } = require("zod");
 const ApiError = require("../exceptions/ApiError");
 const NotFoundError = require("../exceptions/NotFoundError");
 
@@ -7,7 +8,9 @@ class ErrorMiddleware {
   }
 
   static errorHandler(err, req, res, next) {
-    if (err instanceof ApiError) {
+    if (err instanceof ZodError) {
+      return res.status(400).json({ status: "fail", data: err.issues });
+    } else if (err instanceof ApiError) {
       return res.status(err.statusCode).json({
         status: err.status,
         message: err.message,

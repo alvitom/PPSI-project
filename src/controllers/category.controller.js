@@ -1,9 +1,14 @@
+const CategorySchema = require("../schemas/category");
 const CategoryService = require("../services/category.service");
 const ApiResponse = require("../utils/ApiResponse");
 
 class CategoryController {
   static async createCategory(req, res) {
-    const { name } = req.body;
+    const payload = req.body;
+
+    CategorySchema.create().parse(payload);
+
+    const { name } = payload;
 
     const data = await CategoryService.createCategory(name);
 

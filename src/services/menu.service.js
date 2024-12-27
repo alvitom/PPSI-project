@@ -1,6 +1,7 @@
+const { v4: uuid4 } = require("uuid");
+const fs = require("fs");
 const MenuModel = require("../models/menu");
 const CategoryModel = require("../models/category");
-const { v4: uuid4 } = require("uuid");
 const { uploadFile } = require("../utils/fileUploader");
 const DatabaseError = require("../exceptions/DatabaseError");
 const NotFoundError = require("../exceptions/NotFoundError");
@@ -8,30 +9,30 @@ const NotFoundError = require("../exceptions/NotFoundError");
 class MenuService {
   static async createMenu(data) {
     const { name, description, price, category, quantity, image } = data;
+    const imageFile = image.filename;
 
     const findCategory = await CategoryModel.findByName(category);
 
     if (!findCategory) {
+      fs.unlinkSync(`public/images/menus/${imageFile}`);
       throw new NotFoundError("Category not found");
     }
 
     const findMenu = await MenuModel.findByName(name);
 
     if (findMenu) {
+      fs.unlinkSync(`public/images/menus/${imageFile}`);
       throw new DatabaseError("Menu already exists");
     }
 
     const categoryId = findCategory.id;
-    const priceFormatted = parseInt(price);
-    const quantityFormatted = parseInt(quantity);
-    const imageFile = image.filename;
 
     const filePath = `public/images/menus/${imageFile}`;
     const destFileName = `images/menus/${imageFile}`;
 
     const imageURL = await uploadFile(filePath, destFileName);
 
-    await MenuModel.create({ name, description, price: priceFormatted, category_id: categoryId, quantity: quantityFormatted, image: imageURL });
+    await MenuModel.create({ name, description, price, category_id: categoryId, quantity, image: imageURL });
 
     const menu = await MenuModel.findByName(name);
 

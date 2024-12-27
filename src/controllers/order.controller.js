@@ -1,9 +1,14 @@
+const OrderSchema = require("../schemas/order");
 const OrderService = require("../services/order.service");
 const ApiResponse = require("../utils/ApiResponse");
 
 class OrderController {
   static async createOrder(req, res) {
-    const { customer, items, total } = req.body;
+    const payload = req.body;
+
+    OrderSchema.create().parse(payload);
+
+    const { customer, items, total } = payload;
 
     const data = await OrderService.createOrder({ customer, items, total });
 
@@ -32,8 +37,12 @@ class OrderController {
   }
 
   static async updateOrderStatus(req, res) {
+    const payload = req.body;
     const { transactionCode } = req.params;
-    const { status } = req.body;
+
+    OrderSchema.updateOrderStatus().parse(payload);
+
+    const { status } = payload;
 
     const data = await OrderService.updateOrderStatus(transactionCode, status);
 

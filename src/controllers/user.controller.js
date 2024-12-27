@@ -1,19 +1,26 @@
+const UserSchema = require("../schemas/user");
 const UserService = require("../services/user.service");
 const ApiResponse = require("../utils/ApiResponse");
 
 class UserController {
   static async register(req, res) {
-    const { email, password, confirmPassword, name } = req.body;
+    const payload = req.body;
 
-    const data = await UserService.register({ email, password, name });
+    UserSchema.create().parse(payload);
+
+    const { email, name, password } = payload;
+
+    const data = await UserService.register({ email, name, password });
 
     ApiResponse.success(res, 201, "success", "User created successfully", data);
   }
 
   static async login(req, res) {
-    const { email, password } = req.body;
+    const payload = req.body;
 
-    const data = await UserService.login({ email, password });
+    UserSchema.login().parse(payload);
+
+    const data = await UserService.login(payload);
 
     ApiResponse.success(res, 200, "success", "User logged in successfully", data);
   }
@@ -27,7 +34,11 @@ class UserController {
   }
 
   static async forgotPassword(req, res) {
-    const { email, password, confirmPassword } = req.body;
+    const payload = req.body;
+
+    UserSchema.forgotPassword().parse(payload);
+
+    const { email, password } = payload;
 
     const data = await UserService.forgotPassword({ email, password });
 
@@ -46,14 +57,20 @@ class UserController {
     const payload = req.body;
     const { email, token } = req.user;
 
+    UserSchema.updateProfile().parse(payload);
+
     const data = await UserService.updateProfile({ userPayload: payload, email, token });
 
     ApiResponse.success(res, 200, "success", "Profile updated successfully", data);
   }
 
   static async changePassword(req, res) {
-    const { oldPassword, newPassword, confirmPassword } = req.body;
+    const payload = req.body;
     const { email, token } = req.user;
+
+    UserSchema.changePassword().parse(payload);
+
+    const { oldPassword, newPassword } = payload;
 
     const data = await UserService.changePassword({ email, token, oldPassword, newPassword });
 
@@ -61,8 +78,12 @@ class UserController {
   }
 
   static async deleteProfile(req, res) {
-    const { password } = req.body;
+    const payload = req.body;
     const { email, token } = req.user;
+
+    UserSchema.deleteProfile().parse(payload);
+
+    const { password } = payload;
 
     const data = await UserService.deleteProfile({ email, token, password });
 
