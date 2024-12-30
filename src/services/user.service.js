@@ -47,10 +47,6 @@ class UserService {
       throw new AuthenticationError("Invalid credentials");
     }
 
-    if (user.token !== "") {
-      throw new AuthorizationError("User already logged in");
-    }
-
     const token = JwtHandler.generateToken({ email: user.email, name: user.name });
 
     await UserModel.update({ token: token }, user.email);
@@ -105,10 +101,6 @@ class UserService {
 
     if (!user) {
       throw new NotFoundError("User not found");
-    }
-
-    if (user.token !== "") {
-      throw new AuthorizationError("User is logging in. Please logout first.");
     }
 
     const newPassword = await bcrypt.hash(data.password, 10);
