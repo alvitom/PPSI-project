@@ -1,6 +1,6 @@
 const OrderSchema = require("../schemas/order");
 const OrderService = require("../services/order.service");
-const ApiResponse = require("../utils/ApiResponse");
+const ApiResponse = require("../utils/apiResponse");
 
 class OrderController {
   static async createOrder(req, res) {

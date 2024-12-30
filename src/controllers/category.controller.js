@@ -1,6 +1,6 @@
 const CategorySchema = require("../schemas/category");
 const CategoryService = require("../services/category.service");
-const ApiResponse = require("../utils/ApiResponse");
+const ApiResponse = require("../utils/apiResponse");
 
 class CategoryController {
   static async createCategory(req, res) {

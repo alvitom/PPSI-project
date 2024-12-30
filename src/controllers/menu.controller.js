@@ -1,7 +1,7 @@
 const fs = require("fs");
 const MenuSchema = require("../schemas/menu");
 const MenuService = require("../services/menu.service");
-const ApiResponse = require("../utils/ApiResponse");
+const ApiResponse = require("../utils/apiResponse");
 const { ZodError } = require("zod");
 const ValidationError = require("../exceptions/ValidationError");
 

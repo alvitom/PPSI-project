@@ -1,6 +1,6 @@
 const UserSchema = require("../schemas/user");
 const UserService = require("../services/user.service");
-const ApiResponse = require("../utils/ApiResponse");
+const ApiResponse = require("../utils/apiResponse");
 
 class UserController {
   static async register(req, res) {
