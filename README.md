@@ -24,16 +24,30 @@ This is the backend service for **PPSI Project**, built using Node.js, Express.j
 
    BUCKET_NAME=google-cloud-storage-bucket
    ```
+
 3. Install dependencies:
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
 4. Usage:
+
 - Run in Development Mode
-    ```bash
-    npm run start:dev
-    ```
+  ```bash
+  npm run start:dev
+  ```
 - Run in Production Mode
-    ```bash
-    npm start
-    ```
+  ```bash
+  npm start
+  ```
+
+## Base URL
+
+- **Development:**
+  ```bash
+  http://localhost:3000/api/v1
+  ```
+- **Production:**
+
+  ```bash
+
+  ```

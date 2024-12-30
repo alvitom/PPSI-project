@@ -1,5 +1,45 @@
 # Menu API Specification
 
+## Create Menu
+
+- **Endpoint:** `/menus`
+- **Method:** `POST`
+- **Headers:**
+  - `Authorization: Bearer {token}`
+  - `Content-Type: multipart/form-data`
+- **Request Body:**
+  ```json
+  {
+    "name": "Mie Ayam Bakso Pangsit",
+    "description": "Mie ayam bakso pangsit adalah hidangan mie dengan topping ayam cincang, jamur cincang, bakso sapi, dan pangsit.",
+    "price": 32000,
+    "category": "Mie",
+    "quantity": 15,
+    "image": "image.jpg"
+  }
+  ```
+- **Response (Success):**
+  - **Status Code:** `201 Created`
+  - **Response Body:**
+    ```json
+    {
+      "status": "success",
+      "message": "Menu created successfully",
+      "data": {
+        "id": "xxxxx-xxx-xxx-...",
+        "name": "Mie Ayam Bakso Pangsit",
+        "description": "Mie ayam bakso pangsit adalah hidangan mie dengan topping ayam cincang, jamur cincang, bakso sapi, dan pangsit.",
+        "price": 32000,
+        "category": "Mie",
+        "quantity": 15,
+        "image": "image.jpg",
+        "rating": 0,
+        "createdAt": "xxxx-xx-xx...",
+        "updatedAt": "xxxx-xx-xx..."
+      }
+    }
+    ```
+
 ## Menu List
 
 - **Endpoint:** `/menus`
@@ -65,5 +105,61 @@
         "createdAt": "xxxx-xx-xx...",
         "updatedAt": "xxxx-xx-xx..."
       }
+    }
+    ```
+
+## Update Menu
+
+- **Endpoint:** `/menus/:name`
+- **Method:** `PUT`
+- **Headers:**
+  - `Authorization: Bearer {token}`
+  - `Content-Type: multipart/form-data`
+- **Request Body:**
+  ```json
+  {
+    "name": "Mie Ayam Bakso Pangsit",
+    "description": "Mie ayam bakso pangsit adalah hidangan mie dengan topping ayam cincang, jamur cincang, bakso sapi, dan pangsit.",
+    "price": 32000,
+    "category": "Mie",
+    "quantity": 15,
+    "image": "image.jpg"
+  }
+  ```
+- **Response (Success):**
+  - **Status Code:** `200 OK`
+  - **Response Body:**
+    ```json
+    {
+      "status": "success",
+      "message": "Menu updated successfully",
+      "data": {
+        "id": "xxxxx-xxx-xxx-...",
+        "name": "Mie Ayam Bakso Pangsit",
+        "description": "Mie ayam bakso pangsit adalah hidangan mie dengan topping ayam cincang, jamur cincang, bakso sapi, dan pangsit.",
+        "price": 32000,
+        "category": "Mie",
+        "quantity": 15,
+        "image": "image.jpg",
+        "rating": 0,
+        "createdAt": "xxxx-xx-xx...",
+        "updatedAt": "xxxx-xx-xx..."
+      }
+    }
+    ```
+
+## Delete Menu
+
+- **Endpoint:** `/menus/:name`
+- **Method:** `DELETE`
+- **Headers:**
+  - `Authorization: Bearer {token}`
+- **Response (Success):**
+  - **Status Code:** `200 OK`
+  - **Response Body:**
+    ```json
+    {
+      "status": "success",
+      "message": "Menu deleted successfully"
     }
     ```
