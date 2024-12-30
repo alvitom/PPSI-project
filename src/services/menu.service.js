@@ -2,7 +2,7 @@ const { v4: uuid4 } = require("uuid");
 const fs = require("fs");
 const MenuModel = require("../models/menu");
 const CategoryModel = require("../models/category");
-const { uploadFile } = require("../utils/fileUploader");
+const { uploadFile, deleteFile } = require("../utils/fileUploader");
 const DatabaseError = require("../exceptions/DatabaseError");
 const NotFoundError = require("../exceptions/NotFoundError");
 
@@ -99,6 +99,81 @@ class MenuService {
       createdAt: menu.created_at,
       updatedAt: menu.updated_at,
     };
+
+    return payload;
+  }
+
+  static async updateMenu(name, data) {
+    const imageFile = data.image && data.image.filename;
+
+    const findMenu = await MenuModel.findByName(name);
+
+    if (!findMenu) {
+      if (imageFile) {
+        fs.unlinkSync(`public/images/menus/${imageFile}`);
+      }
+      throw new NotFoundError("Menu not found");
+    }
+
+    const findCategory = await CategoryModel.findByName(data.category);
+
+    if (!findCategory) {
+      if (imageFile) {
+        fs.unlinkSync(`public/images/menus/${imageFile}`);
+      }
+      throw new NotFoundError("Category not found");
+    }
+
+    const findUpdatedMenu = await MenuModel.findByName(data.name);
+
+    if (findUpdatedMenu && findUpdatedMenu.id !== findMenu.id) {
+      if (imageFile) {
+        fs.unlinkSync(`public/images/menus/${imageFile}`);
+      }
+      throw new DatabaseError("Menu already exists");
+    }
+
+    const categoryId = findCategory.id;
+
+    if (imageFile) {
+      const filePath = `public/images/menus/${imageFile}`;
+      const destFileName = `images/menus/${imageFile}`;
+
+      const imageURL = await uploadFile(filePath, destFileName);
+
+      await Promise.all([MenuModel.update(findMenu.id, { name: data.name, description: data.description, price: data.price, category_id: categoryId, quantity: data.quantity, image: imageURL }), deleteFile(findMenu.image)]);
+    } else {
+      await MenuModel.update(findMenu.id, { name: data.name, description: data.description, price: data.price, category_id: categoryId, quantity: data.quantity });
+    }
+
+    const menu = await MenuModel.findByName(data.name);
+
+    const payload = {
+      id: uuid4(),
+      name: menu.name,
+      description: menu.description,
+      price: menu.price,
+      category: menu.category,
+      quantity: menu.quantity,
+      image: menu.image,
+      rating: menu.rating,
+      createdAt: menu.created_at,
+      updatedAt: menu.updated_at,
+    };
+
+    return payload;
+  }
+
+  static async deleteMenu(name) {
+    const findMenu = await MenuModel.findByName(name);
+
+    if (!findMenu) {
+      throw new NotFoundError("Menu not found");
+    }
+
+    await Promise.all([MenuModel.delete(findMenu.id), deleteFile(findMenu.image)]);
+
+    const payload = null;
 
     return payload;
   }

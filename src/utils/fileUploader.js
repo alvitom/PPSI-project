@@ -28,4 +28,13 @@ const uploadFile = async (filePath, destFileName) => {
   }
 };
 
-module.exports = { uploadFile };
+const deleteFile = async (fileName) => {
+  try {
+    const url = new URL(fileName);
+    await storage.bucket(bucketName).file(url.pathname.slice(32)).delete();
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+module.exports = { uploadFile, deleteFile };
