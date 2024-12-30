@@ -1,4 +1,6 @@
+const AuthorizationError = require("../exceptions/AuthorizationError");
 const NotFoundError = require("../exceptions/NotFoundError");
+const ValidationError = require("../exceptions/ValidationError");
 const MenuModel = require("../models/menu");
 const OrderModel = require("../models/order");
 const TransactionCode = require("../utils/transactionCodeGenerator");
@@ -13,6 +15,20 @@ class OrderService {
       if (!menu) {
         throw new NotFoundError("Menu not found");
       }
+
+      if (item.quantity > menu.quantity) {
+        throw new ValidationError("Menu quantity is not enough");
+      }
+      
+      const subtotal = menu.price * item.quantity;
+
+      if(subtotal !== item.subtotal) {
+        throw new ValidationError("Subtotal does not match");
+      }
+    }
+
+    if (total !== items.reduce((acc, item) => acc + item.subtotal, 0)) {
+      throw new ValidationError("Total does not match");
     }
 
     const transactionCode = TransactionCode.generate();
@@ -91,6 +107,20 @@ class OrderService {
 
     if (!findOrder) {
       throw new NotFoundError("Order not found");
+    }
+
+    if(findOrder.order_status.toLowerCase() === "completed" || findOrder.order_status.toLowerCase() === "cancelled") {
+      throw new AuthorizationError("Order status cannot be updated because it has already been completed or cancelled. Please make a new order.");
+    }
+
+    if (status.toLowerCase() === "completed") {
+      const orderItems = await OrderModel.findOrderItems(transactionCode);
+
+      for (const item of orderItems) {
+        const menu = await MenuModel.findByName(item.name);
+
+        await MenuModel.update(item.menu_item_id, { quantity: menu.quantity - item.quantity });
+      }
     }
 
     await OrderModel.updateOrderStatus(transactionCode, status);

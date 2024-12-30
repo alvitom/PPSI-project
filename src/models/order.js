@@ -129,7 +129,7 @@ class OrderModel {
   static findOrderItems(transactionCode) {
     return new Promise((resolve, reject) => {
       const query =
-        "SELECT order_items.quantity, order_items.subtotal, orders.*, menus.name, menus.price, menus.image FROM order_items INNER JOIN orders ON order_items.transaction_code = orders.transaction_code INNER JOIN menus ON order_items.menu_item_id = menus.id WHERE order_items.transaction_code = ?";
+        "SELECT order_items.menu_item_id, order_items.quantity, order_items.subtotal, orders.*, menus.name, menus.price, menus.image FROM order_items INNER JOIN orders ON order_items.transaction_code = orders.transaction_code INNER JOIN menus ON order_items.menu_item_id = menus.id WHERE order_items.transaction_code = ?";
       db.query(query, [transactionCode], (err, results) => {
         if (err) {
           return reject(err);
@@ -142,7 +142,7 @@ class OrderModel {
 
   static updateOrderStatus(transactionCode, status) {
     return new Promise((resolve, reject) => {
-      const query = "UPDATE orders SET order_status = ? WHERE transaction_code = ?";
+      const query = "UPDATE orders SET order_status = ? , updated_at = NOW() WHERE transaction_code = ?";
       db.query(query, [status, transactionCode], (err, result) => {
         if (err) {
           return reject(err);
