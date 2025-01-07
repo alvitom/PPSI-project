@@ -49,5 +49,5 @@ This is the backend service for **PPSI Project**, built using Node.js, Express.j
 - **Production:**
 
   ```bash
-
+  http://mieayamkeritingluwes.site/api/v1
   ```
