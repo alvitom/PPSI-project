@@ -31,7 +31,8 @@ class MenuModel {
   static find(limit, offset, search, category) {
     return new Promise((resolve, reject) => {
       if (search && category) {
-        const query = "SELECT menus.id, menus.name, menus.price, menus.image FROM menus INNER JOIN categories ON menus.category_id = categories.id WHERE categories.name = ? AND menus.name LIKE ? ORDER BY name ASC LIMIT ? OFFSET ?";
+        const query =
+          "SELECT menus.id, menus.name, menus.price, categories.name AS category, menus.quantity, menus.image FROM menus INNER JOIN categories ON menus.category_id = categories.id WHERE categories.name = ? AND menus.name LIKE ? ORDER BY name ASC LIMIT ? OFFSET ?";
         db.query(query, [category, `%${search}%`, limit, offset], (err, results) => {
           if (err) {
             return reject(err);
@@ -40,7 +41,8 @@ class MenuModel {
           }
         });
       } else if (search) {
-        const query = "SELECT id, name, price, image FROM menus WHERE name LIKE ? ORDER BY name ASC LIMIT ? OFFSET ?";
+        const query =
+          "SELECT menus.id, menus.name, menus.price, categories.name AS category, menus.quantity, menus.image FROM menus INNER JOIN categories ON menus.category_id = categories.id WHERE menus.name LIKE ? ORDER BY name ASC LIMIT ? OFFSET ?";
         db.query(query, [`%${search}%`, limit, offset], (err, results) => {
           if (err) {
             return reject(err);
@@ -49,7 +51,8 @@ class MenuModel {
           }
         });
       } else if (category) {
-        const query = "SELECT menus.id, menus.name, menus.price, menus.image FROM menus INNER JOIN categories ON menus.category_id = categories.id WHERE categories.name = ? ORDER BY name ASC LIMIT ? OFFSET ?";
+        const query =
+          "SELECT menus.id, menus.name, menus.price, categories.name AS category, menus.quantity, menus.image FROM menus INNER JOIN categories ON menus.category_id = categories.id WHERE categories.name = ? ORDER BY name ASC LIMIT ? OFFSET ?";
         db.query(query, [category, limit, offset], (err, results) => {
           if (err) {
             return reject(err);
@@ -58,7 +61,7 @@ class MenuModel {
           }
         });
       } else {
-        const query = "SELECT id, name, price, image FROM menus ORDER BY name ASC LIMIT ? OFFSET ?";
+        const query = "SELECT menus.id, menus.name, menus.price, categories.name AS category, menus.quantity, menus.image FROM menus INNER JOIN categories ON menus.category_id = categories.id ORDER BY name ASC LIMIT ? OFFSET ?";
         db.query(query, [limit, offset], (err, results) => {
           if (err) {
             return reject(err);
@@ -82,7 +85,7 @@ class MenuModel {
           }
         });
       } else if (search) {
-        const query = "SELECT COUNT(*) AS total FROM menus WHERE name LIKE ?";
+        const query = "SELECT COUNT(*) AS total FROM menus INNER JOIN categories ON menus.category_id = categories.id WHERE menus.name LIKE ?";
         db.query(query, [`%${search}%`], (err, results) => {
           if (err) {
             return reject(err);
@@ -100,7 +103,7 @@ class MenuModel {
           }
         });
       } else {
-        const query = "SELECT COUNT(*) AS total FROM menus";
+        const query = "SELECT COUNT(*) AS total FROM menus INNER JOIN categories ON menus.category_id = categories.id";
         db.query(query, (err, results) => {
           if (err) {
             return reject(err);
