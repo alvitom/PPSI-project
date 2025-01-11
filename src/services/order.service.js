@@ -48,6 +48,7 @@ class OrderService {
       customer: order.customer_name,
       items: items,
       total: order.total_price,
+      paymentMethod: order.payment_method,
       status: order.order_status,
       createdAt: order.created_at,
       updatedAt: order.updated_at,
@@ -94,6 +95,7 @@ class OrderService {
       customer: orderItems[0].customer_name,
       items: items,
       total: orderItems[0].total_price,
+      paymentMethod: orderItems[0].payment_method,
       status: orderItems[0].order_status,
       createdAt: orderItems[0].created_at,
       updatedAt: orderItems[0].updated_at,
@@ -102,7 +104,7 @@ class OrderService {
     return payload;
   }
 
-  static async updateOrderStatus(transactionCode, status) {
+  static async updateOrderStatus(transactionCode, paymentMethod, status) {
     const findOrder = await OrderModel.findByTransactionCode(transactionCode);
 
     if (!findOrder) {
@@ -123,7 +125,7 @@ class OrderService {
       }
     }
 
-    await OrderModel.updateOrderStatus(transactionCode, status);
+    await OrderModel.updateOrderStatus(transactionCode, paymentMethod, status);
 
     const order = await OrderModel.findByTransactionCode(transactionCode);
 
@@ -131,6 +133,7 @@ class OrderService {
       transactionCode: order.transaction_code,
       customer: order.customer_name,
       total: order.total_price,
+      paymentMethod: order.payment_method,
       status: order.order_status,
       createdAt: order.created_at,
       updatedAt: order.updated_at,

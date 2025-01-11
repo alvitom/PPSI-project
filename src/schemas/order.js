@@ -23,10 +23,15 @@ class OrderSchema {
   }
 
   static updateOrderStatus() {
+    const paymentMethodEnum = ["cash", "qris", "unsettled"];
     const statusEnum = ["pending", "completed", "cancelled"];
 
     return z
       .object({
+        paymentMethod: z
+          .string({ required_error: "Payment method is required", invalid_type_error: "Payment method must be a string" })
+          .toLowerCase()
+          .refine((value) => paymentMethodEnum.includes(value), { message: "Invalid payment method. Must be one of: cash, qris, unsettled" }),
         status: z
           .string({ required_error: "Status is required", invalid_type_error: "Status must be a string" })
           .toLowerCase()

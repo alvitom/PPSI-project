@@ -46,6 +46,7 @@
           }
         ],
         "total": 96000,
+        "paymentMethod": "Unsettled",
         "status": "Pending",
         "createdAt": "xxxx-xx-xx...",
         "updatedAt": "xxxx-xx-xx..."
@@ -83,6 +84,7 @@
             "transaction_code": "xxxxxxxxxx",
             "customer_name": "John Doe",
             "total_price": 96000,
+            "payment_method": "Unsettled",
             "order_status": "Pending",
             "created_at": "xxxx-xx-xx...",
             "updated_at": "xxxx-xx-xx..."
@@ -132,6 +134,7 @@
           }
         ],
         "total": 96000,
+        "paymentMethod": "Unsettled",
         "status": "Pending",
         "createdAt": "xxxx-xx-xx...",
         "updatedAt": "xxxx-xx-xx..."
@@ -162,6 +165,7 @@
         "transactionCode": "xxxxxxxxxx",
         "customer": "John Doe",
         "total": 96000,
+        "paymentMethod": "Cash",
         "status": "Completed",
         "createdAt": "xxxx-xx-xx...",
         "updatedAt": "xxxx-xx-xx..."

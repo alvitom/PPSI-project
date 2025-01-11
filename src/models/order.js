@@ -140,10 +140,10 @@ class OrderModel {
     });
   }
 
-  static updateOrderStatus(transactionCode, status) {
+  static updateOrderStatus(transactionCode, paymentMethod, status) {
     return new Promise((resolve, reject) => {
-      const query = "UPDATE orders SET order_status = ? , updated_at = NOW() WHERE transaction_code = ?";
-      db.query(query, [status, transactionCode], (err, result) => {
+      const query = "UPDATE orders SET payment_method = ? , order_status = ? , updated_at = NOW() WHERE transaction_code = ?";
+      db.query(query, [paymentMethod, status, transactionCode], (err, result) => {
         if (err) {
           return reject(err);
         } else {

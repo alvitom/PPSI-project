@@ -42,9 +42,9 @@ class OrderController {
 
     OrderSchema.updateOrderStatus().parse(payload);
 
-    const { status } = payload;
+    const { paymentMethod, status } = payload;
 
-    const data = await OrderService.updateOrderStatus(transactionCode, status);
+    const data = await OrderService.updateOrderStatus(transactionCode, paymentMethod, status);
 
     ApiResponse.success(res, 200, "success", "Order status updated successfully", data);
   }
